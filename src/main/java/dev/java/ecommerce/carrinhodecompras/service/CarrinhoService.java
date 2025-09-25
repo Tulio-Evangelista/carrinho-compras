@@ -21,6 +21,7 @@ public class CarrinhoService {
     private final ProductService productService;
 
 
+
     public Carrinho listarCarrinhosPorId(String id){
         return carrinhoRepository.findById(id).orElseThrow(() -> new RuntimeException("Carrinho nao encontrado"));
     }
@@ -62,6 +63,34 @@ public class CarrinhoService {
         return carrinhoRepository.save(carrinho);
     }
 
+
+
+    public Carrinho atualizarCarrinhoPorId(String id, CarrinhoRequest carrinhoRequest){
+        Carrinho carrinho = listarCarrinhosPorId(id);
+
+        if(carrinho.getStatus() == Status.Closed){
+            throw new RuntimeException("Carrinho ja finalizado");
+        }
+
+        List<ProductModel> produtosAtualizados = new ArrayList<>();
+
+        carrinhoRequest.products().forEach(productRequest -> {
+            PlatziProductResponse platziProductResponse = productService.listarProdutosPorId(productRequest.getId());
+
+            produtosAtualizados.add(ProductModel.builder()
+                    .id(platziProductResponse.id())
+                    .title(platziProductResponse.title())
+                    .price(platziProductResponse.price())
+                    .quantity(productRequest.getQuantity())
+                    .build());
+
+        });
+
+        carrinho.setProdutos(produtosAtualizados);
+        carrinho.calcularTotal(productService);
+
+        return carrinhoRepository.save(carrinho);
+    }
 
 
 }

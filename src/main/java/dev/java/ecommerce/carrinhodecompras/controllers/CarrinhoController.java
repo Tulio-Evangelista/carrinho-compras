@@ -28,4 +28,9 @@ public class CarrinhoController {
         return ResponseEntity.status(HttpStatus.CREATED).body(carrinhoService.createdCarrinho(carrinhoRequest));
     }
 
+    @PutMapping("/atualizar/{id}")
+    public ResponseEntity<Carrinho> atualizarCarrinhoPorId(@RequestBody CarrinhoRequest carrinhoRequest, @PathVariable String id){
+        return ResponseEntity.status(HttpStatus.OK).body(carrinhoService.atualizarCarrinhoPorId(id, carrinhoRequest));
+    }
+
 }
