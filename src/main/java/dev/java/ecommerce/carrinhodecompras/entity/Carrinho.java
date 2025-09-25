@@ -1,6 +1,8 @@
 package dev.java.ecommerce.carrinhodecompras.entity;
 
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+import dev.java.ecommerce.carrinhodecompras.enums.FormaPagamento;
 import dev.java.ecommerce.carrinhodecompras.enums.Status;
 import dev.java.ecommerce.carrinhodecompras.model.ProductModel;
 import dev.java.ecommerce.carrinhodecompras.service.ProductService;
@@ -29,6 +31,9 @@ public class Carrinho {
     private List<ProductModel> produtos;
 
     private Status status;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private FormaPagamento pagamento;
 
     public void calcularTotal(ProductService productService){
         this.total = produtos.stream().map(p -> productService.listarProdutosPorId(p.getId())

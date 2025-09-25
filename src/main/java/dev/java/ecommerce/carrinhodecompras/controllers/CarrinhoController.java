@@ -3,6 +3,7 @@ package dev.java.ecommerce.carrinhodecompras.controllers;
 
 import dev.java.ecommerce.carrinhodecompras.entity.Carrinho;
 import dev.java.ecommerce.carrinhodecompras.request.CarrinhoRequest;
+import dev.java.ecommerce.carrinhodecompras.request.PagamentoRequest;
 import dev.java.ecommerce.carrinhodecompras.service.CarrinhoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -31,6 +32,13 @@ public class CarrinhoController {
     @PutMapping("/atualizar/{id}")
     public ResponseEntity<Carrinho> atualizarCarrinhoPorId(@RequestBody CarrinhoRequest carrinhoRequest, @PathVariable String id){
         return ResponseEntity.status(HttpStatus.OK).body(carrinhoService.atualizarCarrinhoPorId(id, carrinhoRequest));
+    }
+
+    @PutMapping("/atualizar/{id}/pagamento")
+    public ResponseEntity<Carrinho> pagamentoCarrinho(@RequestBody PagamentoRequest pagamentoRequest, @PathVariable String id){
+
+        System.out.println("Pagamento recebido: " + pagamentoRequest.getPagamento());
+        return ResponseEntity.status(HttpStatus.OK).body(carrinhoService.pagamentoCarrinho(id, pagamentoRequest));
     }
 
 }

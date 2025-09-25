@@ -6,6 +6,7 @@ import dev.java.ecommerce.carrinhodecompras.enums.Status;
 import dev.java.ecommerce.carrinhodecompras.model.ProductModel;
 import dev.java.ecommerce.carrinhodecompras.repository.CarrinhoRepository;
 import dev.java.ecommerce.carrinhodecompras.request.CarrinhoRequest;
+import dev.java.ecommerce.carrinhodecompras.request.PagamentoRequest;
 import dev.java.ecommerce.carrinhodecompras.response.PlatziProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,7 @@ public class CarrinhoService {
 
     private final CarrinhoRepository carrinhoRepository;
     private final ProductService productService;
+
 
 
 
@@ -72,7 +74,7 @@ public class CarrinhoService {
             throw new RuntimeException("Carrinho ja finalizado");
         }
 
-        List<ProductModel> produtosAtualizados = new ArrayList<>();
+        List<ProductModel> produtosAtualizados = new ArrayList<>(carrinho.getProdutos());
 
         carrinhoRequest.products().forEach(productRequest -> {
             PlatziProductResponse platziProductResponse = productService.listarProdutosPorId(productRequest.getId());
@@ -90,6 +92,16 @@ public class CarrinhoService {
         carrinho.calcularTotal(productService);
 
         return carrinhoRepository.save(carrinho);
+    }
+
+    public Carrinho pagamentoCarrinho(String id, PagamentoRequest pagamentoRequest){
+        Carrinho carrinhoSalvo = listarCarrinhosPorId(id);
+        carrinhoSalvo.setPagamento(pagamentoRequest.getPagamento());
+        carrinhoSalvo.setStatus(Status.Closed);
+        return carrinhoRepository.save(carrinhoSalvo);
+
+
+
     }
 
 
